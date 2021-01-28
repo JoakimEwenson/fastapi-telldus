@@ -54,7 +54,7 @@ class SensorObject():
 
 
 def fetch_sensor_list(return_raw=False, return_list=False):
-    telldus_url = '{}/sensors/list'.format(base_url)
+    telldus_url = f'{base_url}/sensors/list'
     telldus_call = telldus_user.get(telldus_url)
     result = json.loads(telldus_call.text)
     sensor_list = []
@@ -83,7 +83,7 @@ def fetch_sensor_list(return_raw=False, return_list=False):
 
 
 def fetch_sensor_data(sensor_id, return_raw=False):
-    telldus_url = '{}/sensor/info?id={}'.format(base_url, sensor_id)
+    telldus_url = f'{base_url}/sensor/info?id={sensor_id}'
 
     telldus_call = telldus_user.get(telldus_url)
 
@@ -144,7 +144,15 @@ def fetch_sensor_data(sensor_id, return_raw=False):
     return result
 
 
+""" 
+ A function for fetching sensor history stored at Telldus 
+"""
+
+
 def fetch_sensor_history(sensor_id):
-    telldus_url = '{}/sensor/history?id={}'.format(base_url, sensor_id)
-    telldus_call = telldus_user.get(telldus_url)
-    return json.loads(telldus_call.text)
+    try:
+        telldus_url = f'{base_url}/sensor/history?id={sensor_id}'
+        telldus_call = telldus_user.get(telldus_url)
+        return json.loads(telldus_call.text)
+    except Exception:
+        return {'error': 'Error while fetching data.'}
