@@ -52,6 +52,8 @@ class SensorObject():
  This function returns a list of SensorObjects to the user.
 '''
 
+# TODO: Add error handling and clean up code
+
 
 def fetch_sensor_list(return_raw=False, return_list=False):
     telldus_url = f'{base_url}/sensors/list'
@@ -80,6 +82,8 @@ def fetch_sensor_list(return_raw=False, return_list=False):
  Function for collecting the latest available information from a specified Telldus sensor ID.
  Returns a SensorObject containing the information to the user
 '''
+
+# TODO: Add error handling and clean up code
 
 
 def fetch_sensor_data(sensor_id, return_raw=False):
