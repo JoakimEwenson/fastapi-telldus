@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 import os
-from caller import fetch_sensor_data, fetch_sensor_history, fetch_sensor_list
+from controller.caller import fetch_sensor_data, fetch_sensor_history, fetch_sensor_list
 
 # Initialize FastAPI
 app = FastAPI()
