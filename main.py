@@ -9,28 +9,28 @@ app = FastAPI()
 # Root will show a listing of sensors connected to supplied API key
 # TODO: Add error handling
 @app.get("/")
-def read_root():
+async def read_root():
     return fetch_sensor_list(return_raw=True, return_list=True)
 
 
 # /sensor endpoint will show sensor listing with details
 # TODO: Add error handling
 @app.get("/sensors")
-def get_sensors():
+async def get_sensors():
     return fetch_sensor_list(return_raw=True)
 
 
 # /sensor/info/{sensor_id} will show specific sensor details
 # TODO: Add error handling
 @app.get("/sensor/info/{sensor_id}")
-def get_sensor_info(sensor_id: int):
+async def get_sensor_info(sensor_id: int):
     return {fetch_sensor_data(sensor_id, return_raw=True)}
 
 
 # /sensor/history/{sensor_id} will show specific sensor history
 # TODO: Add error handling
 @app.get("/sensor/history/{sensor_id}")
-def get_sensor_history(sensor_id: int):
+async def get_sensor_history(sensor_id: int):
     return {
         'sensor_id': sensor_id,
         'result': fetch_sensor_history(sensor_id)
