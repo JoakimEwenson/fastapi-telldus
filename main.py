@@ -1,10 +1,22 @@
-from fastapi import FastAPI
 import os
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from controller.caller import fetch_sensor_data, fetch_sensor_history, fetch_sensor_list
 
 # Initialize FastAPI
 app = FastAPI()
 
+origins = [
+    "*",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Root will show a listing of sensors connected to supplied API key
 # TODO: Add error handling
