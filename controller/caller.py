@@ -67,10 +67,10 @@ def fetch_sensor_list(return_raw=False, return_list=False):
     if (return_list):
         for res in result['sensor']:
             sensor_list.append({
-                'sensor_id': res['id'],
-                'sensor_name': res['name'],
-                'sensor_lastupdate': res['lastUpdated'],
-                'sensor_model': res['model']
+                'id': res['id'],
+                'name': res['name'],
+                'lastupdate': res['lastUpdated'],
+                'model': res['model']
             })
     else:
         for res in result['sensor']:
