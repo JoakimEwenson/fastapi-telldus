@@ -1,7 +1,11 @@
 import json
 import os
 from datetime import datetime
+from dotenv import load_dotenv
 from requests_oauthlib import OAuth1Session
+
+# Load .env file
+load_dotenv()
 
 # Set up OAuth against Telldus Live API
 telldus_oauth1_session = os.environ.get('TELLDUS_OAUTH1_SESSION')
