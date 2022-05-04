@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from controller.caller import fetch_sensor_data, fetch_sensor_history, fetch_sensor_list
+from app.controller.caller import fetch_sensor_data, fetch_sensor_history, fetch_sensor_list
 
 # Initialize FastAPI
 app = FastAPI()
