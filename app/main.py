@@ -21,7 +21,8 @@ app.add_middleware(
 # TODO: Add error handling
 @app.get("/")
 async def read_root():
-    return fetch_sensor_list(return_raw=True, return_list=True)
+    #return fetch_sensor_list(return_raw=True, return_list=True)
+    return {"info":"Unspecified endpoint"}
 
 # Health check for uptime monitors
 @app.get("/healthcheck")
