@@ -29,6 +29,11 @@ async def read_root():
 def healthcheck():
     return {"status":"OK"}
 
+# /sensorlist endpoint listing sensors without data
+@app.get("/sensorlist")
+async def get_sensorlist():
+    return fetch_sensor_list(return_raw=True, return_list=True)
+
 # /sensor endpoint will show sensor listing with details
 # TODO: Add error handling
 @app.get("/sensors")
