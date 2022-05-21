@@ -23,6 +23,10 @@ app.add_middleware(
 async def read_root():
     return fetch_sensor_list(return_raw=True, return_list=True)
 
+# Health check for uptime monitors
+@app.get("/healthcheck")
+def healthcheck():
+    return {"status":"OK"}
 
 # /sensor endpoint will show sensor listing with details
 # TODO: Add error handling
