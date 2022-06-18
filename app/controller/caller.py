@@ -1,3 +1,4 @@
+import concurrent.futures
 import json
 import os
 from datetime import datetime
@@ -22,14 +23,13 @@ telldus_user = OAuth1Session(telldus_oauth1_session,
 # Base URL for the API
 base_url = "https://api.telldus.com/json"
 
-'''
- SensorObject with default data in case of empty or invalid response.
- Note that last_updated-values of all sorts are a Unix timestamp and might 
- need some adjusting to display correct values.
-'''
-
 
 class SensorObject():
+    '''
+    SensorObject with default data in case of empty or invalid response.
+    Note that last_updated-values of all sorts are a Unix timestamp and might 
+    need some adjusting to display correct values.
+    '''
     sensor_id: str
     client_name: str
     name: str
@@ -51,15 +51,13 @@ class SensorObject():
     timezone_offset: int
 
 
-''' 
- Function for collecting a list of sensors connected to your Telldus account and fetch latest available information from them.
- This function returns a list of SensorObjects to the user.
-'''
-
-# TODO: Add error handling and clean up code
-
-
 def fetch_sensor_list(return_raw=False, return_list=False):
+    ''' 
+    Function for collecting a list of sensors connected to your Telldus account and fetch latest available information from them.
+    This function returns a list of SensorObjects to the user.
+    '''
+
+    # TODO: Add error handling and clean up code
     telldus_url = f'{base_url}/sensors/list'
     telldus_call = telldus_user.get(telldus_url)
     result = json.loads(telldus_call.text)
@@ -73,31 +71,39 @@ def fetch_sensor_list(return_raw=False, return_list=False):
                 'model': res['model']
             })
     else:
+        # Create empty array for storing sensor IDs
+        sensors = []
+        # Iterate result and append array with response
         for res in result['sensor']:
-            if (return_raw):
-                sensor_list.append(fetch_sensor_data(res['id'], True))
-            else:
-                sensor_list.append(fetch_sensor_data(res['id']))
+            sensors.append(res['id'])
+            # Old method
+            # if (return_raw):
+            #     sensor_list.append(fetch_sensor_data(res['id'], True))
+            # else:
+            #     sensor_list.append(fetch_sensor_data(res['id']))
+        # Use concurrent to fetch sensor data for all sensors in list
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            for item in executor.map(fetch_sensor_data, sensors):
+                sensor_list.append(item)
 
     return sensor_list
 
 
-'''
- Function for collecting the latest available information from a specified Telldus sensor ID.
- Returns a SensorObject containing the information to the user
-'''
-
-# TODO: Add error handling and clean up code
-
-
 def fetch_sensor_data(sensor_id, return_raw=False):
+    '''
+    Function for collecting the latest available information from a specified Telldus sensor ID.
+    Returns a SensorObject containing the information to the user
+    '''
+
+    # TODO: Add error handling and clean up code
+
     telldus_url = f'{base_url}/sensor/info?id={sensor_id}'
 
     telldus_call = telldus_user.get(telldus_url)
 
     json_data = json.loads(telldus_call.text)
 
-    if json_data:
+    if json_data and json_data['name'] != None:
         result = SensorObject()
         result.sensor_id = json_data['id']
         result.name = json_data['name']
@@ -146,18 +152,15 @@ def fetch_sensor_data(sensor_id, return_raw=False):
             pass
         result.timezone_offset = json_data['timezoneoffset']
 
-    else:
-        result = SensorObject()
-
-    return result
-
-
-""" 
- A function for fetching sensor history stored at Telldus 
-"""
+        return result
+    # Default empty
+    return SensorObject()
 
 
 def fetch_sensor_history(sensor_id):
+    """ 
+    A function for fetching sensor history stored at Telldus 
+    """
     try:
         telldus_url = f'{base_url}/sensor/history?id={sensor_id}'
         telldus_call = telldus_user.get(telldus_url)
