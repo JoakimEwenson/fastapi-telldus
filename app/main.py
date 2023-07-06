@@ -41,18 +41,18 @@ async def get_sensors():
     return fetch_sensor_list(return_raw=True)
 
 
-# /sensor/info/{sensor_id} will show specific sensor details
+# /sensor/info/{sensorId} will show specific sensor details
 # TODO: Add error handling
-@app.get("/sensor/info/{sensor_id}")
-async def get_sensor_info(sensor_id: int):
-    return {fetch_sensor_data(sensor_id, return_raw=True)}
+@app.get("/sensor/info/{sensorId}")
+async def get_sensor_info(sensorId: int):
+    return {fetch_sensor_data(sensorId, return_raw=True)}
 
 
-# /sensor/history/{sensor_id} will show specific sensor history
+# /sensor/history/{sensorId} will show specific sensor history
 # TODO: Add error handling
-@app.get("/sensor/history/{sensor_id}")
-async def get_sensor_history(sensor_id: int):
+@app.get("/sensor/history/{sensorId}")
+async def get_sensor_history(sensorId: int):
     return {
-        'sensor_id': sensor_id,
-        'result': fetch_sensor_history(sensor_id)
+        'sensorId': sensorId,
+        'result': fetch_sensor_history(sensorId)
     }

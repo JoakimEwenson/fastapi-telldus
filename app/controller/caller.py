@@ -27,28 +27,28 @@ base_url = "https://api.telldus.com/json"
 class SensorObject():
     '''
     SensorObject with default data in case of empty or invalid response.
-    Note that last_updated-values of all sorts are a Unix timestamp and might 
+    Note that lastUpdated-values of all sorts are a Unix timestamp and might
     need some adjusting to display correct values.
     '''
-    sensor_id: str
-    client_name: str
+    id: int
+    clientName: str
     name: str
-    last_updated: datetime
+    lastUpdated: datetime
     ignored: bool
     editable: bool
-    temp_value: float
-    temp_last_updated: datetime
-    temp_max_value: float
-    temp_max_time: datetime
-    temp_min_value: float
-    temp_min_time: datetime
-    humidity_value: float
-    humidity_last_updated: datetime
-    humidity_max_value: float
-    humidity_max_time: datetime
-    humidity_min_value: float
-    humidity_min_time: datetime
-    timezone_offset: int
+    tempValue: float
+    tempLastUpdated: datetime
+    tempMaxValue: float
+    tempMaxTime: datetime
+    tempMinValue: float
+    tempMinTime: datetime
+    humidityValue: float
+    humidityLastUpdated: datetime
+    humidityMaxValue: float
+    humidityMaxTime: datetime
+    humidityMinValue: float
+    humidityMinTime: datetime
+    timezoneOffset: int
 
 
 def fetch_sensor_list(return_raw=False, return_list=False):
@@ -89,7 +89,7 @@ def fetch_sensor_list(return_raw=False, return_list=False):
     return sensor_list
 
 
-def fetch_sensor_data(sensor_id, return_raw=False):
+def fetch_sensor_data(sensorId, return_raw=False):
     '''
     Function for collecting the latest available information from a specified Telldus sensor ID.
     Returns a SensorObject containing the information to the user
@@ -97,7 +97,7 @@ def fetch_sensor_data(sensor_id, return_raw=False):
 
     # TODO: Add error handling and clean up code
 
-    telldus_url = f'{base_url}/sensor/info?id={sensor_id}'
+    telldus_url = f'{base_url}/sensor/info?id={sensorId}'
 
     telldus_call = telldus_user.get(telldus_url)
 
@@ -105,64 +105,64 @@ def fetch_sensor_data(sensor_id, return_raw=False):
 
     if json_data and json_data['name'] != None:
         result = SensorObject()
-        result.sensor_id = json_data['id']
+        result.id = int(json_data['id'])
         result.name = json_data['name']
-        result.client_name = json_data['clientName']
-        result.last_updated = json_data['lastUpdated'] if return_raw else datetime.fromtimestamp(
+        result.clientName = json_data['clientName']
+        result.lastUpdated = json_data['lastUpdated'] if return_raw else datetime.fromtimestamp(
             int(json_data['lastUpdated']))
         try:
             if json_data['data'][0]['name'] == 'temp':
                 # Handle temperature values
-                result.temp_value = float(json_data['data'][0]['value'])
-                result.temp_max_value = float(json_data['data'][0]['max'])
-                result.temp_min_value = float(json_data['data'][0]['min'])
+                result.tempValue = float(json_data['data'][0]['value'])
+                result.tempMaxValue = float(json_data['data'][0]['max'])
+                result.tempMinValue = float(json_data['data'][0]['min'])
                 # Handle datetime values
                 if (return_raw):
-                    result.temp_last_updated = json_data['data'][0]['lastUpdated']
-                    result.temp_max_time = json_data['data'][0]['maxTime']
-                    result.temp_min_time = json_data['data'][0]['minTime']
+                    result.tempLastUpdated = json_data['data'][0]['lastUpdated']
+                    result.tempMaxTime = json_data['data'][0]['maxTime']
+                    result.tempMinTime = json_data['data'][0]['minTime']
                 else:
-                    result.templast_updated = datetime.fromtimestamp(
+                    result.templastUpdated = datetime.fromtimestamp(
                         int(json_data['data'][0]['lastUpdated']))
-                    result.temp_max_time = datetime.fromtimestamp(
+                    result.tempMaxTime = datetime.fromtimestamp(
                         int(json_data['data'][0]['maxTime']))
-                    result.temp_min_time = datetime.fromtimestamp(
+                    result.tempMinTime = datetime.fromtimestamp(
                         int(json_data['data'][0]['minTime']))
         except Exception:
             pass
         try:
             if json_data['data'][1]['name'] == 'humidity':
                 # Handle humidity values
-                result.humidity_value = int(json_data['data'][1]['value'])
-                result.humidity_max_value = int(json_data['data'][1]['max'])
-                result.humidity_min_value = int(json_data['data'][1]['min'])
+                result.humidityValue = int(json_data['data'][1]['value'])
+                result.humidityMaxValue = int(json_data['data'][1]['max'])
+                result.humidityMinValue = int(json_data['data'][1]['min'])
                 # Handle datetime values
                 if (return_raw):
-                    result.humidity_last_updated = json_data['data'][1]['lastUpdated']
-                    result.humidity_max_time = json_data['data'][1]['maxTime']
-                    result.humidity_min_time = json_data['data'][1]['minTime']
+                    result.humidityLastUpdated = json_data['data'][1]['lastUpdated']
+                    result.humidityMaxTime = json_data['data'][1]['maxTime']
+                    result.humidityMinTime = json_data['data'][1]['minTime']
                 else:
-                    result.humidity_last_updated = datetime.fromtimestamp(
+                    result.humidityLastUpdated = datetime.fromtimestamp(
                         int(json_data['data'][1]['lastUpdated']))
-                    result.humidity_max_time = datetime.fromtimestamp(
+                    result.humidityMaxTime = datetime.fromtimestamp(
                         int(json_data['data'][1]['maxTime']))
-                    result.humidity_min_time = datetime.fromtimestamp(
+                    result.humidityMinTime = datetime.fromtimestamp(
                         int(json_data['data'][1]['minTime']))
         except Exception:
             pass
-        result.timezone_offset = json_data['timezoneoffset']
+        result.timezoneOffset = json_data['timezoneoffset']
 
         return result
     # Default empty
     return SensorObject()
 
 
-def fetch_sensor_history(sensor_id):
+def fetch_sensor_history(sensorId):
     """ 
     A function for fetching sensor history stored at Telldus 
     """
     try:
-        telldus_url = f'{base_url}/sensor/history?id={sensor_id}'
+        telldus_url = f'{base_url}/sensor/history?id={sensorId}'
         telldus_call = telldus_user.get(telldus_url)
         return json.loads(telldus_call.text)
     except Exception:
